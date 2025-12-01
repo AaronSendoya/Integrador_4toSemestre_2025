@@ -88,7 +88,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         try {
             Uri uri = Uri.parse(uriString);
-            // Aquí antes te crasheaba: ahora lo envolvemos en try/catch
             ivProfileAvatar.setImageURI(uri);
         } catch (SecurityException | IllegalArgumentException e) {
             Log.e(TAG, "No se pudo acceder al avatar guardado, limpiando preferencia.", e);
@@ -103,7 +102,7 @@ public class ProfileActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
 
-        // Para poder tomar permiso persistente
+        // Permiso de lectura + permiso persistente en el intent
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
 
@@ -120,13 +119,12 @@ public class ProfileActivity extends AppCompatActivity {
 
             Uri uri = data.getData();
             if (uri != null) {
-                // Tomar permiso persistente para que funcione incluso tras reiniciar la app
-                final int takeFlags = data.getFlags()
-                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                        | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+
                 try {
-                    getContentResolver().takePersistableUriPermission(uri, takeFlags);
+                    getContentResolver().takePersistableUriPermission(
+                            uri,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    );
                 } catch (SecurityException e) {
                     Log.w(TAG, "No se pudo tomar permiso persistente para la imagen", e);
                 }
