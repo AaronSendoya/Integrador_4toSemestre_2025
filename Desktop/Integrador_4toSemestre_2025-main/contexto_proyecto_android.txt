@@ -1,0 +1,89 @@
+CONTEXTO DEL PROYECTO ANDROID: RISKGUARD
+
+1. RESUMEN GENERAL DEL PROYECTO
+RiskGuard es una aplicación Android nativa (Java) diseñada para la gestión y reporte de riesgos (incendios, inundaciones, etc.). Permite a los usuarios registrarse, visualizar el clima actual basado en su ubicación, ver alertas recientes, y crear reportes de riesgos geolocalizados que se sincronizan con un backend. La app funciona con un modelo "offline-first" utilizando una base de datos local SQLite que se sincroniza con una API REST.
+
+2. ARQUITECTURA Y ORGANIZACIÓN DE PAQUETES
+- Arquitectura: MVVM (Model-View-ViewModel) con patrón Repository.
+- Organización de Paquetes:
+  - `ui`: Contiene Activities, Fragments, ViewModels y Adapters.
+  - `data`: Manejo de datos (Repository, API interfaces, SQLite Helper).
+  - `models`: POJOs y clases de datos (ReportModel, RiskReportState).
+  - `core`: Lógica de negocio pura y patrones de diseño (Services, Strategies).
+  - `utils`: Utilidades generales.
+- Patrones de Diseño:
+  - Singleton (RiskManagerService, ApiRepository).
+  - Repository (ApiRepository).
+  - Observer (LiveData en ViewModels, RiskEventListener).
+  - Strategy (RiskStrategy y sus implementaciones para diferentes tipos de riesgo).
+  - Facade (RiskManagerService simplifica la interacción entre UI, DB y API).
+
+3. FUNCIONALIDADES ACTUALES
+- Autenticación: Login y Registro de usuarios (local y remoto).
+- Home:
+  - Visualización de clima actual (Temp, Humedad, Viento, Lluvia) usando WeatherAPI.
+  - Resumen de la última alerta de riesgo.
+  - Accesos directos a Mapa y Reporte.
+- Mapa: Visualización de riesgos en mapa (Google Maps / OSM).
+- Reportes:
+  - Formulario para crear nuevos reportes de riesgo (Tipo, Descripción, Foto, Ubicación).
+  - Cálculo automático de nivel de riesgo según el tipo (Estrategias).
+- Historial: Lista de reportes generados por el usuario con estado de sincronización.
+- Sincronización: Mecanismo para subir reportes pendientes cuando hay conexión.
+
+4. CLASES Y COMPONENTES CLAVE
+UI (Vista):
+- `MainActivity`: Contenedor principal con BottomNavigationView.
+- `LoginActivity` / `RegisterActivity`: Pantallas de autenticación.
+- `HomeFragment`: Pantalla principal. Gestiona permisos de ubicación y muestra datos del clima y última alerta.
+- `ReportFragment`: Formulario para crear reportes. Usa `RiskManagerService`.
+- `HistoryFragment`: Muestra lista de reportes usando `ReportHistoryAdapter`.
+- `SharedRiskViewModel`: ViewModel compartido que expone `LiveData<List<ReportModel>>` y comunica la UI con `RiskManagerService`.
+
+Lógica de Negocio (Core):
+- `RiskManagerService`: Servicio central (Singleton). Coordina la creación de reportes, selección de estrategia de riesgo y llamadas al repositorio.
+- `RiskStrategy` (Interface): Define el contrato para calcular niveles de riesgo.
+  - Implementaciones: `FireStrategy`, `FloodStrategy`, `WindStrategy`, `OtherRiskStrategy`.
+
+Datos (Data):
+- `ApiRepository`: Repositorio único. Decide si buscar datos en local (SQLite) o remoto (Retrofit). Maneja la lógica de sincronización.
+- `DBHelper`: Manejo de SQLite. Tablas `usuarios` y `registros`.
+- `RiskGuardApi`: Interfaz Retrofit para comunicación con el backend de reportes.
+- `WeatherApiService`: Interfaz (implícita/usada en repo) para WeatherAPI.
+
+Modelos:
+- `ReportModel`: Entidad principal del reporte (id, tipo, lat/lon, estado, nivel, etc.).
+- `RiskReportState`: Enum para estados del reporte (PENDING, PROCESSED, ERROR).
+
+5. PERSISTENCIA Y MANEJO DE DATOS
+- Base de Datos Local: SQLite nativo (`android.database.sqlite`).
+- Tablas Principales:
+  - `usuarios`: id, remote_id, nombre, correo, password, sync_status.
+  - `registros`: id, remote_id, tipo, descripcion, latitud, longitud, fecha, estado, nivel, url_foto, id_usuario, sync_status.
+- Almacenamiento: Los datos se guardan primero localmente (`SYNC_STATUS_PENDING`) y luego se intentan subir.
+
+6. COMUNICACIÓN CON BACKEND / APIs
+- Librería de Red: Retrofit 2 + Gson + OkHttp.
+- Endpoints Principales (`RiskGuardApi`):
+  - `POST /registros`: Crear nuevo reporte.
+  - `GET /registros`: Obtener todos los reportes.
+  - `GET /registros/usuario/{id}`: Obtener reportes de un usuario.
+  - `PUT /registros/{id}`: Actualizar reporte.
+  - `DELETE /registros/{id}`: Eliminar reporte.
+- API Externa: WeatherAPI (api.weatherapi.com) para datos del clima en `HomeFragment`.
+
+7. PUNTOS DE EXTENSIÓN
+- Nuevos Tipos de Riesgo: Crear una nueva clase en `core` que implemente `RiskStrategy` y registrarla en `RiskManagerService`.
+- Nuevas Pantallas: Agregar Fragment en `ui`, layout XML y entrada en navegación.
+- Sincronización Automática: Implementar `WorkManager` para sincronización en segundo plano (actualmente parece ser disparada por eventos de UI/Service).
+- Autenticación: Integrar tokens JWT en `ApiRepository` si el backend lo soporta (actualmente validación básica/local).
+
+8. DEPENDENCIAS Y CONFIGURACIÓN
+- Min SDK: 24 (Android 7.0)
+- Target SDK: 36 (Android 15)
+- Librerías Clave:
+  - Retrofit & Gson (Red)
+  - Glide (Carga de imágenes)
+  - Google Play Services Location & Maps (Mapas y Ubicación)
+  - OSMDroid (Alternativa de mapas OpenStreetMap)
+  - AndroidX Lifecycle & ViewModel (Arquitectura)

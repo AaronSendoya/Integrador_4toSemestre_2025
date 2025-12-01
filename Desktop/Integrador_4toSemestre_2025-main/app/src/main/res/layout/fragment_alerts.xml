@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    tools:context=".ui.AlertsFragment">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvAlertstitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/alerts_title"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/gray_800" />
+
+    <!-- Línea separadora -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="24dp"
+        android:background="@color/gray_300" />
+
+    <!-- Mensaje vacío (estado por defecto) -->
+    <TextView
+        android:id="@+id/tvAlertsemptymessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:text="@string/alerts_empty_message"
+        android:textSize="14sp"
+        android:textColor="@color/gray_600" />
+
+    <!-- Lista de alertas (para cuando haya datos reales) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAlerts"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="16dp"
+        android:visibility="gone"
+        tools:listitem="@layout/item_report_history" />
+
+</LinearLayout>

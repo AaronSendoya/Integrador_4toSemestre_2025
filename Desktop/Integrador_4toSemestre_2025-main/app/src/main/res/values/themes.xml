@@ -1,0 +1,56 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Tema base claro (sin ActionBar) -->
+    <style name="Base.Theme.RiskGuard" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/red_600</item>
+        <item name="colorPrimaryVariant">@color/red_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="colorSecondary">@color/red_500</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Fondo principal claro -->
+        <item name="colorSurface">@color/white</item>
+
+        <!-- Barra de estado y navegación -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor">@color/white</item>
+
+        <!-- Estilo global de botones Material -->
+        <item name="materialButtonStyle">@style/Widget.RiskGuard.Button</item>
+    </style>
+
+    <!-- NoActionBar theme variant for login and registration screens -->
+    <style name="Base.Theme.RiskGuard.NoActionBar" parent="Base.Theme.RiskGuard">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="Widget.RiskGuard.Button" parent="Widget.MaterialComponents.Button">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.RiskGuard.ButtonOverlay</item>
+        <item name="backgroundTint">@color/red_600</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ShapeAppearance.RiskGuard.ButtonOverlay" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <!-- Tema público que usas en el Manifest -->
+    <style name="Theme.RiskGuard" parent="Base.Theme.RiskGuard" />
+    
+    <!-- NoActionBar theme for login and registration -->
+    <style name="Theme.RiskGuard.NoActionBar" parent="Base.Theme.RiskGuard">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+</resources>

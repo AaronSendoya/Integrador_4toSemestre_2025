@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.MapViewFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mapa de Riesgos"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/gray_800"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:background="@color/white"
+        android:elevation="2dp" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:background="@color/white"
+        android:scrollbars="none"
+        android:elevation="2dp"
+        android:contentDescription="Contenedor de filtros de riesgo.">
+
+        <LinearLayout
+            android:id="@+id/ll_map_filters_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
+
+    </HorizontalScrollView>
+
+    <!-- Contenedor para mapa + botón flotante -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- OpenStreetMap (osmdroid) -->
+        <org.osmdroid.views.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Botón para ir a la ubicación actual -->
+        <ImageButton
+            android:id="@+id/btn_my_location"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:background="@drawable/abc_btn_borderless_material"
+            android:contentDescription="Ir a mi ubicación"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_menu_mylocation" />
+
+    </FrameLayout>
+
+</LinearLayout>
